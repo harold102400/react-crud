@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserTable from './components/UserTable';
 import { v4 as uuidv4 } from 'uuid';
 import AddUserForm from './components/AddUserForm';
@@ -6,14 +6,25 @@ import EditUserForm from './components/EditUserForm';
 
 function App() {
   
-  const usersData = [
+  /* const usersData = [
     { id: uuidv4(), name: 'Tania', username: 'floppydiskette' },
     { id: uuidv4(), name: 'Craig', username: 'siliconeidolon' },
     { id: uuidv4(), name: 'Ben', username: 'benisphere' },
-  ]
+  ] */
   
   //state
-  const [users, setUsers] = useState(usersData)
+  const [users, setUsers] = useState( () => {
+    const saveData = window.localStorage.getItem('crudData');
+    if(saveData){
+      return JSON.parse(saveData)
+    } else {
+      return []
+    }
+  });
+
+  useEffect(() => {
+    window.localStorage.setItem('crudData', JSON.stringify(users))
+  }, [users])
 
   //add user function
   const addUser = (user) => {
